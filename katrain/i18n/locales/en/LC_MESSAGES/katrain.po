@@ -373,9 +373,6 @@ msgstr "Predicted follow-up: {pv}"
 msgid "Info:AI thoughts"
 msgstr "AI thought process: {thoughts}"
 
-msgid "No analysis available"
-msgstr "No analysis available"
-
 msgid "Analyzing move..."
 msgstr "Analyzing move..."
 
@@ -1123,3 +1120,191 @@ msgstr "Custom command"
 
 msgid "engine:backend:note"
 msgstr "The selected tab determines the engine used."
+
+#. AI explanation feature
+msgid "analysis:aiexplain"
+msgstr "AI Explanation"
+
+msgid "AI explanation"
+msgstr "AI Explanation"
+
+msgid "AI Explanation"
+msgstr "AI Explanation"
+
+msgid "Black"
+msgstr "Black"
+
+msgid "White"
+msgstr "White"
+
+msgid "leads by"
+msgstr " leads by "
+
+msgid "trails by"
+msgstr " trails by "
+
+msgid "points"
+msgstr " points"
+
+msgid "passes"
+msgstr " passes"
+
+msgid "Black territory estimate"
+msgstr "Black territory estimate"
+
+msgid "White territory estimate"
+msgstr "White territory estimate"
+
+msgid "Analyzing current position..."
+msgstr "Analyzing current position..."
+
+msgid "Engine error: {msg}"
+msgstr "Engine error: {msg}"
+
+msgid "No analysis available"
+msgstr "No analysis available"
+
+msgid "No candidate moves found."
+msgstr "No candidate moves found."
+
+msgid "overall"
+msgstr "Overall"
+
+msgid "winrate"
+msgstr "winrate"
+
+msgid "Recommended move"
+msgstr "Recommended move"
+
+msgid "letter"
+msgstr "letter"
+
+msgid "score lead"
+msgstr "score lead"
+
+msgid "for"
+msgstr "for "
+
+msgid "perspective"
+msgstr "'s perspective"
+
+msgid "visits"
+msgstr "visits"
+
+msgid "policy prior"
+msgstr "policy prior"
+
+msgid "Main variation"
+msgstr "Main variation"
+
+msgid "Candidate comparison"
+msgstr "Candidate comparison"
+
+msgid "points/winrate relative to best"
+msgstr "points/winrate relative to best"
+
+msgid "worse"
+msgstr " worse"
+
+msgid "better"
+msgstr " better"
+
+msgid "variation"
+msgstr "variation"
+
+msgid "Your move"
+msgstr "Your move"
+
+msgid "AI recommended"
+msgstr "AI recommended "
+
+msgid "you lost about"
+msgstr "you lost about "
+
+msgid "Your winrate"
+msgstr "Your winrate"
+
+msgid "best winrate"
+msgstr "best winrate"
+
+msgid "Territory estimate"
+msgstr "Territory estimate"
+
+msgid "based on ownership"
+msgstr "based on ownership"
+
+msgid "Analysis visits"
+msgstr "Analysis visits"
+
+msgid "Tip"
+msgstr "Tip"
+
+msgid "Click a candidate letter on the board to play its variation."
+msgstr ""
+"Click a candidate button below to play it on the board and show its "
+"variation."
+
+msgid "Done"
+msgstr "Done"
+
+msgid "Error"
+msgstr "Error"
+
+#. LLM settings
+msgid "menu:llmsettings"
+msgstr "LLM Settings"
+
+msgid "LLM settings"
+msgstr "LLM Settings"
+
+msgid ""
+"Configure your LLM for natural language explanations. Leave API Key empty if"
+" you don't want to use it."
+msgstr ""
+"Configure your LLM for natural language explanations. Leave API Key empty if"
+" you don't want to use it."
+
+msgid "LLM API Key"
+msgstr "LLM API Key"
+
+msgid "LLM Model"
+msgstr "LLM Model"
+
+msgid "LLM Endpoint"
+msgstr "LLM Endpoint"
+
+msgid "Enable LLM explanations"
+msgstr "Enable LLM explanations"
+
+msgid "Test Connection"
+msgstr "Test Connection"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Testing..."
+msgstr "Testing..."
+
+msgid "Success"
+msgstr "Success"
+
+msgid "Failed"
+msgstr "Failed"
+
+msgid "Generating natural language explanation..."
+msgstr "Generating natural language explanation..."
+
+msgid "LLM explanation failed"
+msgstr "LLM explanation failed"
+
+msgid "AI Natural Language Explanation"
+msgstr "AI Natural Language Explanation"
+
+msgid "LLM API key is not set. Please configure it in General Settings."
+msgstr "LLM API key is not set. Please configure it in LLM Settings."
+
+msgid "LLM model is not selected."
+msgstr "LLM model is not selected."

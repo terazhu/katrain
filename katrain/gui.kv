@@ -841,6 +841,11 @@
         icon: 'ai.png'
         shortcut: 'enter'
         on_action: root.katrain("ai-move")
+    AnalysisMenuItem:
+        text: i18n._("analysis:aiexplain")
+        icon: 'analysis.png'
+        shortcut: 'e'
+        on_action: root.katrain("ai-explain-popup")
 
 
 <AnalysisControls>:
@@ -1043,6 +1048,11 @@
             icon: 'AI-Settings.png'
             shortcut: 'F7'
             on_action: root.katrain('ai-popup')
+        MainMenuItem:
+            text: i18n._('menu:llmsettings')
+            icon: 'ai.png'
+            shortcut: 'F4'
+            on_action: root.katrain('llm-settings-popup')
         MainMenuItem:
             text: i18n._('menu:settings')
             icon: 'General-Settings.png'

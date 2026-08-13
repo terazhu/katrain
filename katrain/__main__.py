@@ -103,7 +103,7 @@ from katrain.core.remote_engine import make_engine
 from katrain.core.contribute_engine import KataGoContributeEngine
 from katrain.core.game import Game, IllegalMoveException, KaTrainSGF, BaseGame
 from katrain.core.sgf_parser import Move, ParseError
-from katrain.gui.popups import ConfigPopup, LoadSGFPopup, NewGamePopup, ConfigAIPopup
+from katrain.gui.popups import ConfigPopup, LoadSGFPopup, NewGamePopup, ConfigAIPopup, AIExplainPopupContent, ConfigLLMPopup
 from katrain.gui.theme import Theme
 from kivymd.app import MDApp
 
@@ -469,6 +469,30 @@ class KaTrainGui(Screen, KaTrainBase):
 
     def _do_analyze_extra(self, mode, **kwargs):
         self.game.analyze_extra(mode, **kwargs)
+
+    def _do_ai_explain_popup(self):
+        if not getattr(self, "game", None):
+            return
+        # 每次都新建，以便对当前局面重新分析
+        if getattr(self, "ai_explain_popup", None):
+            self.ai_explain_popup.dismiss()
+        self.ai_explain_popup = I18NPopup(
+            title_key="AI explanation",
+            size=[dp(720), dp(640)],
+            content=AIExplainPopupContent(self),
+        ).__self__
+        self.ai_explain_popup.content.popup = self.ai_explain_popup
+        self.ai_explain_popup.open()
+
+    def _do_llm_settings_popup(self):
+        if not getattr(self, "llm_settings_popup", None):
+            self.llm_settings_popup = I18NPopup(
+                title_key="LLM settings",
+                size=[dp(560), dp(520)],
+                content=ConfigLLMPopup(self),
+            ).__self__
+            self.llm_settings_popup.content.popup = self.llm_settings_popup
+        self.llm_settings_popup.open()
 
     def _do_selfplay_setup(self, until_move, target_b_advantage=None):
         self.game.selfplay(int(until_move) if isinstance(until_move, float) else until_move, target_b_advantage)

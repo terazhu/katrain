@@ -267,6 +267,119 @@ class ConfigTimerPopup(QuickConfigGui):
         self.katrain.update_state()
 
 
+class ConfigLLMPopup(QuickConfigGui):
+    """LLM 设置弹窗：API Key、模型选择、是否启用。"""
+
+    def __init__(self, katrain):
+        from kivymd.uix.boxlayout import MDBoxLayout
+        from kivymd.uix.label import MDLabel
+        from kivymd.uix.selectioncontrol import MDCheckbox
+        from kivy.metrics import dp
+
+        super().__init__(katrain)
+        self.orientation = "vertical"
+        self.spacing = dp(12)
+        self.padding = dp(16)
+
+        # 提示
+        hint = MDLabel(
+            text=i18n._("Configure your LLM for natural language explanations. "
+                        "Leave API Key empty if you don't want to use it."),
+            size_hint_y=None, height=dp(50), halign="left", valign="top",
+        )
+        hint.bind(width=lambda inst, w: setattr(inst, "text_size", (w, None)))
+        self.add_widget(hint)
+
+        # API Key
+        key_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
+        key_row.add_widget(MDLabel(text=i18n._("LLM API Key") + ":", size_hint_x=None, width=dp(120)))
+        self.api_key = LabelledTextInput(text=katrain.config("llm/api_key", ""), multiline=False)
+        self.api_key.input_property = "llm/api_key"
+        key_row.add_widget(self.api_key)
+        self.add_widget(key_row)
+
+        # 模型选择
+        model_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
+        model_row.add_widget(MDLabel(text=i18n._("LLM Model") + ":", size_hint_x=None, width=dp(120)))
+        self.model_spinner = LabelledSpinner()
+        self.model_spinner.input_property = "llm/model"
+        from katrain.core.llm import BUILTIN_MODELS
+        self.model_spinner.values = [name for _, name in BUILTIN_MODELS]
+        self.model_spinner.value_refs = [mid for mid, _ in BUILTIN_MODELS]
+        # 设置当前值
+        current = katrain.config("llm/model", BUILTIN_MODELS[0][0])
+        try:
+            idx = self.model_spinner.value_refs.index(current)
+        except ValueError:
+            idx = 0
+        self.model_spinner.text = self.model_spinner.values[idx]
+        model_row.add_widget(self.model_spinner)
+        self.add_widget(model_row)
+
+        # Endpoint（高级）
+        endpoint_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
+        endpoint_row.add_widget(MDLabel(text=i18n._("LLM Endpoint") + ":", size_hint_x=None, width=dp(120)))
+        self.endpoint = LabelledTextInput(
+            text=katrain.config("llm/endpoint", "https://ark.cn-beijing.volces.com/api/v3/chat/completions"),
+            multiline=False,
+        )
+        self.endpoint.input_property = "llm/endpoint"
+        endpoint_row.add_widget(self.endpoint)
+        self.add_widget(endpoint_row)
+
+        # 启用开关
+        use_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(40), spacing=dp(8))
+        use_row.add_widget(MDLabel(text=i18n._("Enable LLM explanations") + ":", size_hint_x=None, width=dp(200)))
+        self.use_checkbox = MDCheckbox(active=bool(katrain.config("llm/use_llm", True)))
+        self.use_checkbox.input_property = "llm/use_llm"
+        use_row.add_widget(self.use_checkbox)
+        use_row.add_widget(MDLabel(text=""))  # spacer
+        self.add_widget(use_row)
+
+        # 测试按钮
+        from katrain.gui.kivyutils import SizedRectangleButton
+        btn_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
+        self.test_btn = SizedRectangleButton(text=i18n._("Test Connection"))
+        self.test_btn.bind(on_release=self.test_connection)
+        btn_row.add_widget(self.test_btn)
+        self.test_result = MDLabel(text="", halign="left")
+        btn_row.add_widget(self.test_result)
+        self.add_widget(btn_row)
+
+        # 确认/取消按钮
+        from katrain.gui.kivyutils import AutoSizedRectangleButton
+        btn_row2 = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8), adaptive_width=True)
+        btn_row2.pos_hint = {"center_x": 0.5}
+        ok_btn = AutoSizedRectangleButton(text=i18n._("OK"))
+        ok_btn.bind(on_release=lambda _b: self.update_config())
+        btn_row2.add_widget(ok_btn)
+        cancel_btn = AutoSizedRectangleButton(text=i18n._("Cancel"))
+        cancel_btn.bind(on_release=lambda _b: self.popup.dismiss())
+        btn_row2.add_widget(cancel_btn)
+        self.add_widget(btn_row2)
+
+    def test_connection(self, *_args):
+        """先保存当前输入，再测试 LLM 连接。"""
+        self.update_config(save_to_file=True, close_popup=False)
+        self.test_result.text = i18n._("Testing...")
+
+        def _test():
+            from katrain.core.llm import chat_completion, LLMError
+            try:
+                reply = chat_completion(
+                    self.katrain,
+                    "请用一句中文介绍你自己。",
+                    max_tokens=50,
+                    timeout=20,
+                )
+                result_text = f"{i18n._('Success')}: {reply[:80]}"
+            except LLMError as e:
+                result_text = f"{i18n._('Failed')}: {e}"
+            Clock.schedule_once(lambda _dt: setattr(self.test_result, "text", result_text), 0)
+
+        threading.Thread(target=_test, daemon=True).start()
+
+
 class NewGamePopup(QuickConfigGui):
     mode = StringProperty("newgame")
 
@@ -1013,3 +1126,104 @@ class GameReportPopup(BoxLayout):
         # if not done analyzing, check again in 1s
         if not self.katrain.engine.is_idle():
             Clock.schedule_once(self._refresh, 1)
+
+
+class AIExplainPopupContent(MDBoxLayout):
+    """AI 讲解弹窗内容：显示文字讲解，并提供候选点按钮用于推演变化。"""
+
+    katrain = ObjectProperty(None)
+    result = ObjectProperty(None)
+
+    def __init__(self, katrain, **kwargs):
+        from kivy.uix.scrollview import ScrollView
+        from kivymd.uix.label import MDLabel
+
+        super().__init__(orientation="vertical", spacing=dp(8), padding=dp(10), **kwargs)
+        self.katrain = katrain
+
+        self.status = MDLabel(
+            text=i18n._("Analyzing current position..."),
+            size_hint_y=None, height=dp(24), markup=True,
+        )
+        self.add_widget(self.status)
+
+        self.scroll = ScrollView(size_hint=(1, 1), do_scroll_x=False)
+        self.body = MDLabel(
+            text="", size_hint_y=None, markup=True,
+            valign="top", halign="left",
+        )
+        self.body.bind(
+            width=lambda inst, w: setattr(inst, "text_size", (w, None)),
+            texture_size=lambda inst, ts: setattr(inst, "height", ts[1]),
+        )
+        self.scroll.add_widget(self.body)
+        self.add_widget(self.scroll)
+
+        self.candidate_row = MDBoxLayout(
+            orientation="horizontal", size_hint_y=None, height=dp(44),
+            spacing=dp(6), adaptive_width=True,
+        )
+        scroll_row = ScrollView(size_hint=(1, None), height=dp(44), do_scroll_y=False)
+        scroll_row.add_widget(self.candidate_row)
+        self.add_widget(scroll_row)
+
+        self.result = None
+        self._worker = threading.Thread(target=self._run_analysis, daemon=True)
+        self._worker.start()
+
+    def _run_analysis(self):
+        from katrain.core.explanation import generate_explanation
+
+        node = self.katrain.game.current_node
+
+        def on_update(msg):
+            Clock.schedule_once(lambda _dt: setattr(self.status, "text", msg), 0)
+
+        try:
+            result = generate_explanation(self.katrain, node, on_update=on_update)
+        except Exception as exc:  # noqa: BLE001
+            import traceback
+            traceback.print_exc()
+            result = {"text": str(exc), "candidates": []}
+
+        def apply(_dt=None):
+            self.result = result
+            self.status.text = i18n._("Done") if "error" not in result else i18n._("Error")
+            self.body.text = result.get("text", "")
+            self._build_candidate_buttons(result.get("candidates", []))
+
+        Clock.schedule_once(apply, 0)
+
+    def _build_candidate_buttons(self, candidates):
+        self.candidate_row.clear_widgets()
+        for m in candidates:
+            btn = SizedRectangleButton(
+                text=f"{m['letter']}. {m['move']}",
+                size_hint_x=None, width=dp(80),
+            )
+            btn.bind(on_release=lambda _b, gtp=m["move"]: self._play_candidate(gtp))
+            self.candidate_row.add_widget(btn)
+
+    def _play_candidate(self, gtp):
+        """在棋盘上走该候选点作为变化分支并演示其 PV。"""
+        game = self.katrain.game
+        node = game.current_node
+        move = Move.from_gtp(gtp, player=node.next_player)
+        try:
+            child = node.play(move)
+        except Exception as exc:  # noqa: BLE001
+            self.status.text = str(exc)
+            return
+        game.set_current_node(child)
+        board = self.katrain.board_gui
+        board.animating_pv = None
+        for m in child.candidate_moves:
+            if m.get("pv"):
+                board.set_animating_pv(m["pv"], child)
+                break
+        self.katrain.update_state(redraw_board=True)
+
+    def on_submit(self):
+        """I18NPopup 确认按钮回调。"""
+        pass
+

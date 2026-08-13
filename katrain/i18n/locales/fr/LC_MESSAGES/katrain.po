@@ -1094,3 +1094,245 @@ msgstr "Commande personnalisée"
 
 msgid "engine:backend:note"
 msgstr "L'onglet sélectionné détermine le moteur utilisé."
+
+#. TODO
+msgid "score lead"
+msgstr "score lead"
+
+#. TODO
+msgid "Main variation"
+msgstr "Main variation"
+
+#. TODO
+msgid "worse"
+msgstr " worse"
+
+#. TODO
+msgid "Black territory estimate"
+msgstr "Black territory estimate"
+
+#. TODO
+msgid "visits"
+msgstr "visits"
+
+#. TODO
+msgid "Black"
+msgstr "Black"
+
+#. TODO
+msgid "passes"
+msgstr " passes"
+
+#. TODO
+msgid "better"
+msgstr " better"
+
+#. TODO
+msgid "White territory estimate"
+msgstr "White territory estimate"
+
+#. TODO
+msgid "perspective"
+msgstr "'s perspective"
+
+#. TODO
+msgid "Candidate comparison"
+msgstr "Candidate comparison"
+
+#. TODO
+msgid "for"
+msgstr "for "
+
+#. TODO
+msgid "points"
+msgstr " points"
+
+#. TODO
+msgid "Tip"
+msgstr "Tip"
+
+#. TODO
+msgid "Your move"
+msgstr "Your move"
+
+#. TODO
+msgid "trails by"
+msgstr " trails by "
+
+#. TODO
+msgid "best winrate"
+msgstr "best winrate"
+
+#. TODO
+msgid "AI explanation"
+msgstr "AI Explanation"
+
+#. TODO
+msgid "overall"
+msgstr "Overall"
+
+#. TODO - AI explanation feature
+msgid "analysis:aiexplain"
+msgstr "AI Explanation"
+
+#. TODO
+msgid "Click a candidate letter on the board to play its variation."
+msgstr ""
+"Click a candidate button below to play it on the board and show its "
+"variation."
+
+#. TODO
+msgid "Territory estimate"
+msgstr "Territory estimate"
+
+#. TODO
+msgid "AI recommended"
+msgstr "AI recommended "
+
+#. TODO
+msgid "Analysis visits"
+msgstr "Analysis visits"
+
+#. TODO
+msgid "points/winrate relative to best"
+msgstr "points/winrate relative to best"
+
+#. TODO
+msgid "variation"
+msgstr "variation"
+
+#. TODO
+msgid "AI Explanation"
+msgstr "AI Explanation"
+
+#. TODO
+msgid "based on ownership"
+msgstr "based on ownership"
+
+#. TODO
+msgid "Error"
+msgstr "Error"
+
+#. TODO
+msgid "Done"
+msgstr "Done"
+
+#. TODO
+msgid "No candidate moves found."
+msgstr "No candidate moves found."
+
+#. TODO
+msgid "winrate"
+msgstr "winrate"
+
+#. TODO
+msgid "Analyzing current position..."
+msgstr "Analyzing current position..."
+
+#. TODO
+msgid "policy prior"
+msgstr "policy prior"
+
+#. TODO
+msgid "White"
+msgstr "White"
+
+#. TODO
+msgid "you lost about"
+msgstr "you lost about "
+
+#. TODO
+msgid "letter"
+msgstr "letter"
+
+#. TODO
+msgid "leads by"
+msgstr " leads by "
+
+#. TODO
+msgid "Recommended move"
+msgstr "Recommended move"
+
+#. TODO
+msgid "Engine error: {msg}"
+msgstr "Engine error: {msg}"
+
+#. TODO
+msgid "Your winrate"
+msgstr "Your winrate"
+
+#. TODO
+msgid "Cancel"
+msgstr "Cancel"
+
+#. TODO
+msgid "LLM Model"
+msgstr "LLM Model"
+
+#. TODO
+msgid "LLM settings"
+msgstr "LLM Settings"
+
+#. TODO
+msgid "AI Natural Language Explanation"
+msgstr "AI Natural Language Explanation"
+
+#. TODO
+msgid "LLM API Key"
+msgstr "LLM API Key"
+
+#. TODO
+msgid "LLM API key is not set. Please configure it in General Settings."
+msgstr "LLM API key is not set. Please configure it in LLM Settings."
+
+#. TODO
+msgid "Generating natural language explanation..."
+msgstr "Generating natural language explanation..."
+
+#. TODO
+msgid "OK"
+msgstr "OK"
+
+#. TODO
+msgid "Failed"
+msgstr "Failed"
+
+#. TODO
+msgid "Test Connection"
+msgstr "Test Connection"
+
+#. TODO
+msgid "Enable LLM explanations"
+msgstr "Enable LLM explanations"
+
+#. TODO
+msgid "LLM model is not selected."
+msgstr "LLM model is not selected."
+
+#. TODO
+msgid "LLM explanation failed"
+msgstr "LLM explanation failed"
+
+#. TODO - LLM settings
+msgid "menu:llmsettings"
+msgstr "LLM Settings"
+
+#. TODO
+msgid "Success"
+msgstr "Success"
+
+#. TODO
+msgid "Testing..."
+msgstr "Testing..."
+
+#. TODO
+msgid ""
+"Configure your LLM for natural language explanations. Leave API Key empty if"
+" you don't want to use it."
+msgstr ""
+"Configure your LLM for natural language explanations. Leave API Key empty if"
+" you don't want to use it."
+
+#. TODO
+msgid "LLM Endpoint"
+msgstr "LLM Endpoint"

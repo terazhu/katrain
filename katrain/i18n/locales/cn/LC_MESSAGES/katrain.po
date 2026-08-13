@@ -1052,3 +1052,184 @@ msgstr "自定义命令"
 
 msgid "engine:backend:note"
 msgstr "所选标签页决定使用的引擎。"
+
+#. AI explanation feature
+msgid "analysis:aiexplain"
+msgstr "AI 讲解"
+
+msgid "AI explanation"
+msgstr "AI 讲解"
+
+msgid "AI Explanation"
+msgstr "AI 讲解"
+
+msgid "Black"
+msgstr "黑方"
+
+msgid "White"
+msgstr "白方"
+
+msgid "leads by"
+msgstr "领先 "
+
+msgid "trails by"
+msgstr "落后 "
+
+msgid "points"
+msgstr " 目"
+
+msgid "passes"
+msgstr "停一手"
+
+msgid "Black territory estimate"
+msgstr "黑方势力估算"
+
+msgid "White territory estimate"
+msgstr "白方势力估算"
+
+msgid "Analyzing current position..."
+msgstr "正在分析当前局面…"
+
+msgid "Engine error: {msg}"
+msgstr "引擎错误：{msg}"
+
+msgid "No candidate moves found."
+msgstr "未找到候选点。"
+
+msgid "overall"
+msgstr "全局"
+
+msgid "winrate"
+msgstr "胜率"
+
+msgid "Recommended move"
+msgstr "推荐着点"
+
+msgid "letter"
+msgstr "标记"
+
+msgid "score lead"
+msgstr "领先目数"
+
+msgid "for"
+msgstr "对"
+
+msgid "perspective"
+msgstr "而言"
+
+msgid "visits"
+msgstr "搜索量"
+
+msgid "policy prior"
+msgstr "策略先验"
+
+msgid "Main variation"
+msgstr "主变化"
+
+msgid "Candidate comparison"
+msgstr "候选点对比"
+
+msgid "points/winrate relative to best"
+msgstr "相对最佳点的目数/胜率差"
+
+msgid "worse"
+msgstr "更差"
+
+msgid "better"
+msgstr "更好"
+
+msgid "variation"
+msgstr "变化"
+
+msgid "Your move"
+msgstr "你的落子"
+
+msgid "AI recommended"
+msgstr "AI 推荐"
+
+msgid "you lost about"
+msgstr "你亏了约"
+
+msgid "Your winrate"
+msgstr "你的胜率"
+
+msgid "best winrate"
+msgstr "最佳胜率"
+
+msgid "Territory estimate"
+msgstr "势力估算"
+
+msgid "based on ownership"
+msgstr "基于归属图"
+
+msgid "Analysis visits"
+msgstr "分析搜索量"
+
+msgid "Tip"
+msgstr "提示"
+
+msgid "Click a candidate letter on the board to play its variation."
+msgstr "点击下方候选点按钮即可在棋盘上摆出该变化。"
+
+msgid "Done"
+msgstr "完成"
+
+msgid "Error"
+msgstr "错误"
+
+#. LLM settings
+msgid "menu:llmsettings"
+msgstr "LLM 设置"
+
+msgid "LLM settings"
+msgstr "LLM 设置"
+
+msgid ""
+"Configure your LLM for natural language explanations. Leave API Key empty if"
+" you don't want to use it."
+msgstr "配置用于自然语言讲解的大模型。如果不想使用，API Key 留空即可。"
+
+msgid "LLM API Key"
+msgstr "LLM API Key"
+
+msgid "LLM Model"
+msgstr "LLM 模型"
+
+msgid "LLM Endpoint"
+msgstr "LLM Endpoint"
+
+msgid "Enable LLM explanations"
+msgstr "启用 LLM 讲解"
+
+msgid "Test Connection"
+msgstr "测试连接"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Testing..."
+msgstr "测试中…"
+
+msgid "Success"
+msgstr "成功"
+
+msgid "Failed"
+msgstr "失败"
+
+msgid "Generating natural language explanation..."
+msgstr "正在生成自然语言讲解…"
+
+msgid "LLM explanation failed"
+msgstr "LLM 讲解失败"
+
+msgid "AI Natural Language Explanation"
+msgstr "AI 自然语言讲解"
+
+msgid "LLM API key is not set. Please configure it in General Settings."
+msgstr "未设置 LLM API Key，请在 LLM 设置中填写。"
+
+msgid "LLM model is not selected."
+msgstr "未选择 LLM 模型。"

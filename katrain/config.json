@@ -24,6 +24,12 @@
         "savepath": "./dist_sgf/",
         "savesgf": false
     },
+    "llm": {
+        "endpoint": "https://ark.cn-beijing.volces.com/api/v3/chat/completions",
+        "api_key": "",
+        "model": "doubao-seed-2.1-turbo",
+        "use_llm": true
+    },
     "general": {
         "sgf_load": "~/Downloads",
         "sgf_save": "./sgfout",
