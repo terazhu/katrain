@@ -1233,3 +1233,21 @@ msgstr "未设置 LLM API Key，请在 LLM 设置中填写。"
 
 msgid "LLM model is not selected."
 msgstr "未选择 LLM 模型。"
+
+msgid "Ask AI about this position"
+msgstr "就当前局面问 AI"
+
+msgid "e.g. Why is A18 recommended?"
+msgstr "例如：为什么推荐 A18？"
+
+msgid "Send"
+msgstr "发送"
+
+msgid "AI is thinking..."
+msgstr "AI 思考中…"
+
+msgid "You"
+msgstr "你"
+
+msgid "AI"
+msgstr "AI"

@@ -281,6 +281,43 @@ def _build_llm_prompt(node, root, top_moves, actual_move: Optional[str]) -> str:
     )
 
 
+def build_chat_context(node, result: Optional[Dict] = None) -> str:
+    """为对话生成当前局面的 JSON 上下文。"""
+    size_x, size_y = node.board_size
+    player = node.next_player
+
+    candidates = []
+    if node.analysis_exists:
+        for m in node.candidate_moves[:6]:
+            candidates.append({
+                "move": m["move"],
+                "score_lead_black": round(m["scoreLead"], 2),
+                "winrate_black": round(m["winrate"], 4),
+                "points_lost_vs_best": round(m.get("pointsLost", 0), 2),
+                "visits": m.get("visits", 0),
+                "pv": m.get("pv", [])[:8],
+            })
+
+    payload = {
+        "board_size": f"{size_x}x{size_y}",
+        "komi": node.komi,
+        "rules": node.ruleset,
+        "player_to_move": "Black" if player == "B" else "White",
+        "current_move": node.move.gtp() if node.move else None,
+        "current_depth": node.depth,
+        "root_score_lead_black": round(node.score, 2) if node.score is not None else None,
+        "root_winrate_black": round(node.winrate, 4) if node.winrate is not None else None,
+        "candidates": candidates,
+    }
+
+    if result and result.get("candidates"):
+        payload["explanation_candidates"] = [
+            {"letter": m["letter"], "move": m["move"]} for m in result["candidates"]
+        ]
+
+    return json.dumps(payload, ensure_ascii=False, indent=2)
+
+
 def build_variation_branch(node, move_gtp: str, length: int = 8):
     """在 node 下创建一个变化分支，按候选点的 PV 摆 length 手。返回分支末端节点（不切换当前节点）。"""
     player = node.next_player

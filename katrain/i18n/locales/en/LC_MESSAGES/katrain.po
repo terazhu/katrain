@@ -1308,3 +1308,21 @@ msgstr "LLM API key is not set. Please configure it in LLM Settings."
 
 msgid "LLM model is not selected."
 msgstr "LLM model is not selected."
+
+msgid "Ask AI about this position"
+msgstr "Ask AI about this position"
+
+msgid "e.g. Why is A18 recommended?"
+msgstr "e.g. Why is A18 recommended?"
+
+msgid "Send"
+msgstr "Send"
+
+msgid "AI is thinking..."
+msgstr "AI is thinking..."
+
+msgid "You"
+msgstr "You"
+
+msgid "AI"
+msgstr "AI"

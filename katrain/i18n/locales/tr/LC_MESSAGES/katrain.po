@@ -1402,3 +1402,27 @@ msgstr ""
 #. TODO
 msgid "LLM Endpoint"
 msgstr "LLM Endpoint"
+
+#. TODO
+msgid "e.g. Why is A18 recommended?"
+msgstr "e.g. Why is A18 recommended?"
+
+#. TODO
+msgid "AI is thinking..."
+msgstr "AI is thinking..."
+
+#. TODO
+msgid "You"
+msgstr "You"
+
+#. TODO
+msgid "AI"
+msgstr "AI"
+
+#. TODO
+msgid "Send"
+msgstr "Send"
+
+#. TODO
+msgid "Ask AI about this position"
+msgstr "Ask AI about this position"

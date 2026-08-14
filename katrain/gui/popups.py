@@ -1129,7 +1129,7 @@ class GameReportPopup(BoxLayout):
 
 
 class AIExplainPopupContent(MDBoxLayout):
-    """AI 讲解弹窗内容：显示文字讲解，并提供候选点按钮用于推演变化。"""
+    """AI 讲解弹窗：自动生成讲解，并支持与 LLM 对话追问。"""
 
     katrain = ObjectProperty(None)
     result = ObjectProperty(None)
@@ -1159,6 +1159,7 @@ class AIExplainPopupContent(MDBoxLayout):
         self.scroll.add_widget(self.body)
         self.add_widget(self.scroll)
 
+        # 候选点按钮
         self.candidate_row = MDBoxLayout(
             orientation="horizontal", size_hint_y=None, height=dp(44),
             spacing=dp(6), adaptive_width=True,
@@ -1166,6 +1167,26 @@ class AIExplainPopupContent(MDBoxLayout):
         scroll_row = ScrollView(size_hint=(1, None), height=dp(44), do_scroll_y=False)
         scroll_row.add_widget(self.candidate_row)
         self.add_widget(scroll_row)
+
+        # 对话区（仅当 LLM 配置好时显示）
+        from katrain.core.llm import is_configured
+        self.chat_history = []
+        if is_configured(katrain):
+            sep = MDLabel(text=f"[b]{i18n._('Ask AI about this position')}[/b]",
+                          size_hint_y=None, height=dp(24), markup=True)
+            self.add_widget(sep)
+
+            chat_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(6))
+            self.chat_input = LabelledTextInput(
+                hint_text=i18n._("e.g. Why is A18 recommended?"),
+                multiline=False,
+            )
+            self.chat_input.bind(on_text_validate=self._send_chat)
+            chat_row.add_widget(self.chat_input)
+            send_btn = SizedRectangleButton(text=i18n._("Send"), size_hint_x=None, width=dp(80))
+            send_btn.bind(on_release=self._send_chat)
+            chat_row.add_widget(send_btn)
+            self.add_widget(chat_row)
 
         self.result = None
         self._worker = threading.Thread(target=self._run_analysis, daemon=True)
@@ -1223,7 +1244,55 @@ class AIExplainPopupContent(MDBoxLayout):
                 break
         self.katrain.update_state(redraw_board=True)
 
+    # ---------- 对话 ----------
+    def _send_chat(self, *_args):
+        question = self.chat_input.text.strip()
+        if not question:
+            return
+        self.chat_input.text = ""
+        self.chat_history.append({"role": "user", "content": question})
+        self._append_chat("user", question)
+        self.status.text = i18n._("AI is thinking...")
+
+        threading.Thread(target=self._chat_worker, daemon=True).start()
+
+    def _chat_worker(self):
+        from katrain.core.explanation import build_chat_context
+        from katrain.core.llm import chat_completion, LLMError, get_model_display_name
+
+        node = self.katrain.game.current_node
+        context = build_chat_context(node, self.result)
+
+        messages = [{"role": "system", "content": (
+            "你是一位围棋九段职业棋手，正在和一个业余爱好者复盘。"
+            "我会给你当前局面的 KataGo 分析数据，请用自然、易懂的中文回答用户的问题，"
+            "可以结合候选点、胜率、目数、变化图来解释。"
+        )}]
+        # 把历史对话带上（最多 6 轮）
+        for msg in self.chat_history[-6:]:
+            messages.append(msg)
+        messages.append({"role": "user", "content": (
+            f"当前局面分析数据：\n{context}\n\n用户问题：{self.chat_history[-1]['content']}"
+        )})
+
+        try:
+            reply = chat_completion(self.katrain, messages, max_tokens=800, timeout=60)
+        except LLMError as e:
+            reply = f"[color=#e88]{i18n._('Error')}: {e}[/color]"
+
+        self.chat_history.append({"role": "assistant", "content": reply})
+        Clock.schedule_once(lambda _dt: self._on_chat_reply(reply), 0)
+
+    def _on_chat_reply(self, reply):
+        self._append_chat("assistant", reply)
+        self.status.text = i18n._("Done")
+
+    def _append_chat(self, role, text):
+        prefix = f"[b][color=#7fb3e0]{i18n._('You')}:[/color][/b] " if role == "user" else f"[b][color=#9bd46b]{i18n._('AI')}:[/color][/b] "
+        self.body.text += f"\n\n{prefix}{text}"
+        # 滚到底部
+        Clock.schedule_once(lambda _dt: setattr(self.scroll, "scroll_y", 0), 0)
+
     def on_submit(self):
-        """I18NPopup 确认按钮回调。"""
         pass
 

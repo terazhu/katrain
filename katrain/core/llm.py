@@ -38,12 +38,15 @@ def get_model_display_name(katrain) -> str:
 
 def chat_completion(
     katrain,
-    prompt: str,
+    prompt,
     system_prompt: Optional[str] = None,
     max_tokens: int = 2000,
     timeout: int = 60,
 ) -> str:
-    """调用火山方舟 chat completion，返回纯文本。"""
+    """调用火山方舟 chat completion，返回纯文本。
+
+    prompt 可以是字符串（单轮），也可以是 [{"role": ..., "content": ...}, ...] 列表（多轮）。
+    """
     api_key = katrain.config("llm/api_key", "").strip()
     model = katrain.config("llm/model", "").strip()
     endpoint = katrain.config("llm/endpoint", DEFAULT_ENDPOINT).strip() or DEFAULT_ENDPOINT
@@ -53,10 +56,13 @@ def chat_completion(
     if not model:
         raise LLMError(i18n._("LLM model is not selected."))
 
-    messages = []
-    if system_prompt:
-        messages.append({"role": "system", "content": system_prompt})
-    messages.append({"role": "user", "content": prompt})
+    if isinstance(prompt, list):
+        messages = prompt
+    else:
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
 
     payload = {
         "model": model,
