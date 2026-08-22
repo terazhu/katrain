@@ -183,9 +183,16 @@ class TsumegoLibrary:
         if not m:
             return None
 
-        # 构造一个 SGFNode
+        # 构造一个 SGFNode，手动解析属性
         props_str = m.group(1)
-        node = SGFNode(properties=SGF.parse_properties(props_str))
+        node = SGFNode()
+        # 解析属性：PROP[val1][val2]... 格式
+        for pm in re.finditer(r"(\w+)((?:\[[^\]\\]*(?:\\.[^\]\\]*)*\])+)", props_str):
+            prop = pm.group(1)
+            vals_raw = pm.group(2)
+            # 提取每个 [value]
+            values = re.findall(r"\[([^\]\\]*(?:\\.[^\]\\]*)*)\]", vals_raw)
+            node.add_list_property(prop, [SGFNode._unescape_value(v) for v in values])
         return TsumegoProblem(node, problem_info["file"], problem_info["id"])
 
 
