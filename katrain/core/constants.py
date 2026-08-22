@@ -36,6 +36,7 @@ PLAYING_NORMAL, PLAYING_TEACHING = "game:normal", "game:teach"
 GAME_TYPES = [PLAYING_NORMAL, PLAYING_TEACHING]
 
 MODE_PLAY, MODE_ANALYZE = "play", "analyze"
+MODE_TSUMEGO = "tsumego"
 
 AI_DEFAULT = "ai:default"
 AI_HANDICAP = "ai:handicap"

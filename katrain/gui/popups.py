@@ -292,7 +292,7 @@ class ConfigLLMPopup(QuickConfigGui):
 
         # API Key
         key_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
-        key_row.add_widget(MDLabel(text=i18n._("LLM API Key") + ":", size_hint_x=None, width=dp(120)))
+        key_row.add_widget(MDLabel(text=i18n._("LLM API Key") + ":", size_hint_x=None, width=dp(140)))
         self.api_key = LabelledTextInput(text=katrain.config("llm/api_key", ""), multiline=False)
         self.api_key.input_property = "llm/api_key"
         key_row.add_widget(self.api_key)
@@ -300,7 +300,7 @@ class ConfigLLMPopup(QuickConfigGui):
 
         # 模型选择
         model_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
-        model_row.add_widget(MDLabel(text=i18n._("LLM Model") + ":", size_hint_x=None, width=dp(120)))
+        model_row.add_widget(MDLabel(text=i18n._("LLM Model") + ":", size_hint_x=None, width=dp(140)))
         self.model_spinner = LabelledSpinner()
         self.model_spinner.input_property = "llm/model"
         from katrain.core.llm import BUILTIN_MODELS
@@ -318,7 +318,7 @@ class ConfigLLMPopup(QuickConfigGui):
 
         # Endpoint（高级）
         endpoint_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
-        endpoint_row.add_widget(MDLabel(text=i18n._("LLM Endpoint") + ":", size_hint_x=None, width=dp(120)))
+        endpoint_row.add_widget(MDLabel(text=i18n._("LLM Endpoint") + ":", size_hint_x=None, width=dp(140)))
         self.endpoint = LabelledTextInput(
             text=katrain.config("llm/endpoint", "https://ark.cn-beijing.volces.com/api/v3/chat/completions"),
             multiline=False,
@@ -329,7 +329,7 @@ class ConfigLLMPopup(QuickConfigGui):
 
         # 启用开关
         use_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(40), spacing=dp(8))
-        use_row.add_widget(MDLabel(text=i18n._("Enable LLM explanations") + ":", size_hint_x=None, width=dp(200)))
+        use_row.add_widget(MDLabel(text=i18n._("Enable LLM explanations") + ":", size_hint_x=None, width=dp(240)))
         self.use_checkbox = MDCheckbox(active=bool(katrain.config("llm/use_llm", True)))
         self.use_checkbox.input_property = "llm/use_llm"
         use_row.add_widget(self.use_checkbox)
@@ -339,10 +339,10 @@ class ConfigLLMPopup(QuickConfigGui):
         # 测试按钮
         from katrain.gui.kivyutils import SizedRectangleButton
         btn_row = MDBoxLayout(orientation="horizontal", size_hint_y=None, height=dp(50), spacing=dp(8))
-        self.test_btn = SizedRectangleButton(text=i18n._("Test Connection"))
+        self.test_btn = SizedRectangleButton(text=i18n._("Test Connection"), size_hint_x=None, width=dp(160))
         self.test_btn.bind(on_release=self.test_connection)
         btn_row.add_widget(self.test_btn)
-        self.test_result = MDLabel(text="", halign="left")
+        self.test_result = MDLabel(text="", halign="left", valign="middle")
         btn_row.add_widget(self.test_result)
         self.add_widget(btn_row)
 
@@ -1296,3 +1296,96 @@ class AIExplainPopupContent(MDBoxLayout):
     def on_submit(self):
         pass
 
+
+
+class TsumegoPopupContent(AIExplainPopupContent):
+    """死活题做题面板：选题、做题、判对错、AI 讲解。"""
+
+    def __init__(self, katrain, category=None, **kwargs):
+        super().__init__(katrain, **kwargs)
+        self.category = category
+        self.session = None
+        self._start_problem()
+
+    def _start_problem(self):
+        """开始一道新题。"""
+        from katrain.core.tsumego import start_tsumego_session, get_current_session
+
+        success, msg = start_tsumego_session(self.katrain, self.category)
+        self.session = get_current_session()
+        if not success:
+            self.status.text = msg
+            return
+
+        self.status.text = f"{msg} | {self.session.problem.to_play} to play"
+        self.body.text = i18n._(
+            "Play the best move on the board. "
+            "KataGo will judge if it's good. "
+            "You have 3 attempts."
+        )
+
+        # 添加做题控制按钮
+        self._add_controls()
+
+    def _add_controls(self):
+        """添加做题控制按钮。"""
+        controls = MDBoxLayout(
+            orientation="horizontal",
+            spacing=dp(8),
+            size_hint_y=None,
+            height=dp(40),
+        )
+
+        btn_hint = MDFlatButton(text=i18n._("Hint"), on_release=self._on_hint)
+        btn_new = MDFlatButton(text=i18n._("New Problem"), on_release=self._on_new)
+        btn_reset = MDFlatButton(text=i18n._("Reset"), on_release=self._on_reset)
+
+        controls.add_widget(btn_hint)
+        controls.add_widget(btn_new)
+        controls.add_widget(btn_reset)
+        self.add_widget(controls)
+
+    def _on_hint(self, *_):
+        if self.session:
+            hint = self.session.get_hint()
+            self.body.text += f"\n\n[b]Hint:[/b] {hint}"
+
+    def _on_new(self, *_):
+        self._start_problem()
+
+    def _on_reset(self, *_):
+        if self.session:
+            self.session._setup_board()
+            self.session.attempts = 0
+            self.session.solved = False
+            self.session.failed = False
+            self.status.text = f"{self.session.problem.name} | {self.session.problem.to_play} to play"
+
+    def on_board_move(self, coords: str) -> str:
+        """
+        用户下棋后调用，返回反馈消息。
+        由 __main__.py 在落子后触发。
+        """
+        if not self.session:
+            return i18n._("No active tsumego session.")
+
+        is_good, msg = self.session.play_move(coords)
+        self.body.text += f"\n\n[{'color=#9bd46b' if is_good else 'color=#e88'}]{msg}[/color]"
+
+        if self.session.solved:
+            self.status.text = i18n._("Solved! Well done!")
+        elif self.session.failed:
+            self.status.text = i18n._("Failed. Try a new problem.")
+        else:
+            self.status.text = (
+                f"{self.session.problem.name} | "
+                f"Attempts: {self.session.attempts}/3 | "
+                f"{self.session.problem.to_play} to play"
+            )
+
+        # 如果解决了或失败了，给 AI 讲解
+        if self.session.solved or self.session.failed:
+            explanation = self.session.get_explanation()
+            self.body.text += f"\n\n[b]AI Analysis:[/b]\n{explanation}"
+
+        return msg

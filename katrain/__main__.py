@@ -103,7 +103,7 @@ from katrain.core.remote_engine import make_engine
 from katrain.core.contribute_engine import KataGoContributeEngine
 from katrain.core.game import Game, IllegalMoveException, KaTrainSGF, BaseGame
 from katrain.core.sgf_parser import Move, ParseError
-from katrain.gui.popups import ConfigPopup, LoadSGFPopup, NewGamePopup, ConfigAIPopup, AIExplainPopupContent, ConfigLLMPopup
+from katrain.gui.popups import ConfigPopup, LoadSGFPopup, NewGamePopup, ConfigAIPopup, AIExplainPopupContent, ConfigLLMPopup, TsumegoPopupContent
 from katrain.gui.theme import Theme
 from kivymd.app import MDApp
 
@@ -464,6 +464,10 @@ class KaTrainGui(Screen, KaTrainBase):
             elif not self.game.current_node.is_pass:
                 self._play_stone_sound()
 
+            # 死活题模式：判题
+            if getattr(self, "tsumego_popup", None) and self.tsumego_popup._is_open:
+                self.tsumego_popup.content.on_board_move(coords)
+
         except IllegalMoveException as e:
             self.controls.set_status(f"Illegal Move: {str(e)}", STATUS_ERROR)
 
@@ -484,11 +488,25 @@ class KaTrainGui(Screen, KaTrainBase):
         self.ai_explain_popup.content.popup = self.ai_explain_popup
         self.ai_explain_popup.open()
 
+    def _do_tsumego_popup(self, category=None):
+        """打开死活题做题面板。"""
+        if not getattr(self, "game", None):
+            return
+        if getattr(self, "tsumego_popup", None):
+            self.tsumego_popup.dismiss()
+        self.tsumego_popup = I18NPopup(
+            title_key="Tsumego",
+            size=[dp(720), dp(640)],
+            content=TsumegoPopupContent(self, category=category),
+        ).__self__
+        self.tsumego_popup.content.popup = self.tsumego_popup
+        self.tsumego_popup.open()
+
     def _do_llm_settings_popup(self):
         if not getattr(self, "llm_settings_popup", None):
             self.llm_settings_popup = I18NPopup(
                 title_key="LLM settings",
-                size=[dp(560), dp(520)],
+                size=[dp(680), dp(560)],
                 content=ConfigLLMPopup(self),
             ).__self__
             self.llm_settings_popup.content.popup = self.llm_settings_popup

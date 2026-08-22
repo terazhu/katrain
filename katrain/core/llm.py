@@ -6,9 +6,9 @@ from typing import Optional
 
 from katrain.core.lang import i18n
 
-DEFAULT_ENDPOINT = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
+DEFAULT_ENDPOINT = "https://ark.cn-beijing.volces.com/api/plan/v3/chat/completions"
 
-# 内置模型（用户只需填 API Key，模型从下拉框选）
+# 内置模型（Agent Plan 短名，用户只需填 API Key）
 BUILTIN_MODELS = [
     ("kimi-k3", "Kimi K3"),
     ("doubao-seed-2.1-turbo", "Doubao Seed 2.1 Turbo"),
